@@ -1,0 +1,831 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Airtable Beginners Guide 2026</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #2d3748;
+            line-height: 1.6;
+            padding: 1%;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 100%;
+            background: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+
+        header {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+            padding: 20px 1%;
+            text-align: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        h1 {
+            font-size: 1.4rem;
+            font-weight: 700;
+            margin-bottom: 8px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .subtitle {
+            font-size: 0.85rem;
+            opacity: 0.95;
+            font-weight: 300;
+        }
+
+        nav {
+            background: #2d3748;
+            padding: 10px 1%;
+            display: flex;
+            overflow-x: auto;
+            gap: 8px;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        nav button {
+            background: #4a5568;
+            color: white;
+            border: none;
+            padding: 10px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            white-space: nowrap;
+            transition: all 0.3s;
+            font-weight: 500;
+        }
+
+        nav button:hover, nav button.active {
+            background: #f093fb;
+            transform: translateY(-2px);
+        }
+
+        .content {
+            padding: 1%;
+        }
+
+        .section {
+            display: none;
+            animation: fadeIn 0.5s;
+        }
+
+        .section.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        h2 {
+            color: #f5576c;
+            font-size: 1.3rem;
+            margin: 20px 0 12px 0;
+            padding-bottom: 8px;
+            border-bottom: 3px solid #f093fb;
+        }
+
+        h3 {
+            color: #667eea;
+            font-size: 1.1rem;
+            margin: 16px 0 10px 0;
+        }
+
+        p {
+            margin-bottom: 12px;
+            color: #4a5568;
+            font-size: 0.95rem;
+        }
+
+        .card {
+            background: linear-gradient(135deg, #667eea15 0%, #764ba215 100%);
+            border-left: 4px solid #667eea;
+            padding: 15px;
+            margin: 12px 0;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .step {
+            background: #f7fafc;
+            border-left: 4px solid #f5576c;
+            padding: 12px;
+            margin: 10px 0;
+            border-radius: 6px;
+        }
+
+        .step-number {
+            display: inline-block;
+            background: #f5576c;
+            color: white;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 28px;
+            font-weight: bold;
+            margin-right: 10px;
+            font-size: 0.9rem;
+        }
+
+        .tip {
+            background: #c3f0ca;
+            border-left: 4px solid #48bb78;
+            padding: 12px;
+            margin: 12px 0;
+            border-radius: 6px;
+        }
+
+        .tip::before {
+            content: "💡 TIP: ";
+            font-weight: bold;
+            color: #2f855a;
+        }
+
+        .warning {
+            background: #fed7d7;
+            border-left: 4px solid #f56565;
+            padding: 12px;
+            margin: 12px 0;
+            border-radius: 6px;
+        }
+
+        .warning::before {
+            content: "⚠️ NOTE: ";
+            font-weight: bold;
+            color: #c53030;
+        }
+
+        ul {
+            margin: 10px 0 10px 20px;
+            color: #4a5568;
+        }
+
+        li {
+            margin: 6px 0;
+            font-size: 0.95rem;
+        }
+
+        .project-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 12px;
+            margin: 16px 0;
+        }
+
+        .project-card {
+            background: white;
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            padding: 16px;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+
+        .project-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.3);
+            border-color: #667eea;
+        }
+
+        .project-icon {
+            font-size: 2rem;
+            margin-bottom: 8px;
+        }
+
+        .project-title {
+            font-weight: bold;
+            color: #2d3748;
+            margin-bottom: 6px;
+            font-size: 1.05rem;
+        }
+
+        .project-desc {
+            font-size: 0.85rem;
+            color: #718096;
+        }
+
+        code {
+            background: #2d3748;
+            color: #f093fb;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.85rem;
+        }
+
+        .feature-list {
+            background: #edf2f7;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 12px 0;
+        }
+
+        footer {
+            background: #2d3748;
+            color: white;
+            text-align: center;
+            padding: 20px 1%;
+            margin-top: 20px;
+            font-size: 0.85rem;
+        }
+
+        .footer-links {
+            margin-top: 10px;
+        }
+
+        .footer-links a {
+            color: #f093fb;
+            text-decoration: none;
+            margin: 0 10px;
+        }
+
+        @media (min-width: 768px) {
+            .project-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            h1 {
+                font-size: 1.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🚀 2026 Airtable Beginners Guide</h1>
+            <p class="subtitle">Master the No-Code Database Platform</p>
+        </header>
+
+        <nav>
+            <button class="nav-btn active" data-section="intro">Getting Started</button>
+            <button class="nav-btn" data-section="basics">Basics</button>
+            <button class="nav-btn" data-section="projects">Projects</button>
+            <button class="nav-btn" data-section="advanced">Advanced</button>
+            <button class="nav-btn" data-section="tips">Tips & Tricks</button>
+        </nav>
+
+        <div class="content">
+            <!-- INTRODUCTION SECTION -->
+            <div class="section active" id="intro">
+                <h2>Welcome to Airtable 2026</h2>
+                <p>Airtable is a powerful no-code platform that combines the simplicity of spreadsheets with the power of databases. In 2026, it's become essential for project management, content planning, CRM, and countless other workflows.</p>
+
+                <div class="card">
+                    <h3>What Makes Airtable Special?</h3>
+                    <ul>
+                        <li><strong>Flexible Views:</strong> Grid, Calendar, Kanban, Gallery, and Timeline</li>
+                        <li><strong>Rich Field Types:</strong> Text, numbers, attachments, linked records, formulas</li>
+                        <li><strong>Collaboration:</strong> Real-time teamwork with comments and mentions</li>
+                        <li><strong>Automation:</strong> Trigger actions based on conditions</li>
+                        <li><strong>Integrations:</strong> Connect with 1000+ apps via native integrations</li>
+                        <li><strong>AI Features:</strong> Smart field suggestions and data analysis</li>
+                    </ul>
+                </div>
+
+                <div class="tip">
+                    Start with Airtable's free plan to explore features before upgrading.
+                </div>
+
+                <h3>What You'll Learn</h3>
+                <div class="feature-list">
+                    <p>✅ Create your first base and tables</p>
+                    <p>✅ Build practical project templates</p>
+                    <p>✅ Master views and filters</p>
+                    <p>✅ Set up automations</p>
+                    <p>✅ Create custom forms and interfaces</p>
+                    <p>✅ Collaborate with teams</p>
+                </div>
+            </div>
+
+            <!-- BASICS SECTION -->
+            <div class="section" id="basics">
+                <h2>Airtable Fundamentals</h2>
+
+                <h3>Understanding the Structure</h3>
+                <div class="card">
+                    <p><strong>Workspace:</strong> Your organization's container for all bases</p>
+                    <p><strong>Base:</strong> Like a database - contains multiple tables</p>
+                    <p><strong>Table:</strong> Like a spreadsheet - contains records and fields</p>
+                    <p><strong>Record:</strong> A row in your table (one item)</p>
+                    <p><strong>Field:</strong> A column in your table (a property)</p>
+                </div>
+
+                <h3>Creating Your First Base</h3>
+                <div class="step">
+                    <span class="step-number">1</span>
+                    <strong>Click "Create a base"</strong> from your workspace dashboard
+                </div>
+                <div class="step">
+                    <span class="step-number">2</span>
+                    <strong>Choose a method:</strong> Start from scratch, use a template, or import data
+                </div>
+                <div class="step">
+                    <span class="step-number">3</span>
+                    <strong>Name your base</strong> something descriptive (e.g., "Marketing Campaign 2026")
+                </div>
+                <div class="step">
+                    <span class="step-number">4</span>
+                    <strong>Add your first table</strong> and start building your structure
+                </div>
+
+                <h3>Essential Field Types (2026)</h3>
+                <div class="feature-list">
+                    <p><code>Single line text</code> - Short text entries</p>
+                    <p><code>Long text</code> - Paragraphs and descriptions</p>
+                    <p><code>Attachment</code> - Upload files and images</p>
+                    <p><code>Checkbox</code> - True/false values</p>
+                    <p><code>Multiple select</code> - Choose multiple options</p>
+                    <p><code>Single select</code> - Choose one option</p>
+                    <p><code>Date</code> - Calendar dates with optional time</p>
+                    <p><code>Number</code> - Integers or decimals</p>
+                    <p><code>Currency</code> - Monetary values</p>
+                    <p><code>Link to another record</code> - Create relationships</p>
+                    <p><code>Lookup</code> - Pull data from linked records</p>
+                    <p><code>Formula</code> - Calculate values automatically</p>
+                    <p><code>AI Field</code> - 2026 AI-powered data generation</p>
+                </div>
+
+                <div class="warning">
+                    Choose field types carefully at the start - changing types later can affect data integrity.
+                </div>
+            </div>
+
+            <!-- PROJECTS SECTION -->
+            <div class="section" id="projects">
+                <h2>Beginner Projects to Build</h2>
+
+                <div class="project-grid">
+                    <div class="project-card" onclick="showProject('task')">
+                        <div class="project-icon">✅</div>
+                        <div class="project-title">Task Manager</div>
+                        <div class="project-desc">Track personal tasks with priorities and deadlines</div>
+                    </div>
+
+                    <div class="project-card" onclick="showProject('content')">
+                        <div class="project-icon">📝</div>
+                        <div class="project-title">Content Calendar</div>
+                        <div class="project-desc">Plan blog posts and social media content</div>
+                    </div>
+
+                    <div class="project-card" onclick="showProject('crm')">
+                        <div class="project-icon">👥</div>
+                        <div class="project-title">Simple CRM</div>
+                        <div class="project-desc">Manage contacts and sales pipeline</div>
+                    </div>
+
+                    <div class="project-card" onclick="showProject('inventory')">
+                        <div class="project-icon">📦</div>
+                        <div class="project-title">Inventory Tracker</div>
+                        <div class="project-desc">Monitor stock levels and orders</div>
+                    </div>
+
+                    <div class="project-card" onclick="showProject('event')">
+                        <div class="project-icon">🎉</div>
+                        <div class="project-title">Event Planner</div>
+                        <div class="project-desc">Organize events with guest lists and budgets</div>
+                    </div>
+
+                    <div class="project-card" onclick="showProject('recipe')">
+                        <div class="project-icon">🍳</div>
+                        <div class="project-title">Recipe Collection</div>
+                        <div class="project-desc">Store recipes with ingredients and photos</div>
+                    </div>
+                </div>
+
+                <div id="project-details"></div>
+            </div>
+
+            <!-- ADVANCED SECTION -->
+            <div class="section" id="advanced">
+                <h2>Advanced Features</h2>
+
+                <h3>Views Mastery</h3>
+                <div class="card">
+                    <p><strong>Grid View:</strong> Classic spreadsheet layout - best for data entry</p>
+                    <p><strong>Calendar View:</strong> Visualize records by date - perfect for scheduling</p>
+                    <p><strong>Kanban View:</strong> Drag-and-drop boards - ideal for workflows</p>
+                    <p><strong>Gallery View:</strong> Visual cards with images - great for products</p>
+                    <p><strong>Timeline View:</strong> Gantt-style project timelines</p>
+                    <p><strong>Form View:</strong> Collect data from others without database access</p>
+                </div>
+
+                <h3>Creating Powerful Formulas</h3>
+                <div class="step">
+                    <span class="step-number">1</span>
+                    <strong>Click field type dropdown</strong> and select "Formula"
+                </div>
+                <div class="step">
+                    <span class="step-number">2</span>
+                    <strong>Enter your formula</strong> using functions like <code>IF()</code>, <code>CONCATENATE()</code>, <code>DATETIME_DIFF()</code>
+                </div>
+                <div class="step">
+                    <span class="step-number">3</span>
+                    <strong>Reference other fields</strong> by clicking them or typing their names
+                </div>
+
+                <div class="feature-list">
+                    <p><strong>Example 1:</strong> <code>IF({Status}="Complete", "✅", "⏳")</code></p>
+                    <p><strong>Example 2:</strong> <code>CONCATENATE({First Name}, " ", {Last Name})</code></p>
+                    <p><strong>Example 3:</strong> <code>DATETIME_DIFF({Due Date}, TODAY(), 'days')</code></p>
+                </div>
+
+                <h3>Setting Up Automations</h3>
+                <div class="step">
+                    <span class="step-number">1</span>
+                    <strong>Click "Automations"</strong> in the top toolbar
+                </div>
+                <div class="step">
+                    <span class="step-number">2</span>
+                    <strong>Choose a trigger:</strong> When record created, updated, or matches conditions
+                </div>
+                <div class="step">
+                    <span class="step-number">3</span>
+                    <strong>Add actions:</strong> Send email, update record, create record, or run script
+                </div>
+                <div class="step">
+                    <span class="step-number">4</span>
+                    <strong>Test and activate</strong> your automation
+                </div>
+
+                <div class="tip">
+                    Use automations to send deadline reminders, welcome emails, or update related records automatically.
+                </div>
+
+                <h3>Linked Records & Relationships</h3>
+                <div class="card">
+                    <p>Link tables together to create powerful relational databases:</p>
+                    <ul>
+                        <li>Projects → Tasks (one-to-many)</li>
+                        <li>Students → Classes (many-to-many)</li>
+                        <li>Orders → Customers (many-to-one)</li>
+                    </ul>
+                </div>
+
+                <div class="step">
+                    <span class="step-number">1</span>
+                    <strong>Create a field</strong> with type "Link to another record"
+                </div>
+                <div class="step">
+                    <span class="step-number">2</span>
+                    <strong>Select the table</strong> you want to link to
+                </div>
+                <div class="step">
+                    <span class="step-number">3</span>
+                    <strong>Allow linking</strong> to multiple records if needed
+                </div>
+                <div class="step">
+                    <span class="step-number">4</span>
+                    <strong>Use Lookup fields</strong> to display data from linked records
+                </div>
+            </div>
+
+            <!-- TIPS SECTION -->
+            <div class="section" id="tips">
+                <h2>Pro Tips & Best Practices</h2>
+
+                <h3>🎯 Organization Tips</h3>
+                <div class="card">
+                    <p><strong>1. Use clear naming conventions</strong> - "2026 Marketing" not "Base 1"</p>
+                    <p><strong>2. Color-code records</strong> - Use single select fields with colors</p>
+                    <p><strong>3. Create a "Master View"</strong> - Keep one unfiltered view</p>
+                    <p><strong>4. Archive old data</strong> - Use a checkbox for "Archived" status</p>
+                    <p><strong>5. Document your base</strong> - Add table descriptions</p>
+                </div>
+
+                <h3>⚡ Performance Tips</h3>
+                <div class="card">
+                    <p><strong>Keep bases under 50,000 records</strong> for optimal performance</p>
+                    <p><strong>Minimize formula complexity</strong> - Split complex formulas into steps</p>
+                    <p><strong>Use filters instead of multiple views</strong> when possible</p>
+                    <p><strong>Limit attachment file sizes</strong> - Compress images before uploading</p>
+                </div>
+
+                <h3>🤝 Collaboration Best Practices</h3>
+                <div class="card">
+                    <p><strong>Set permissions carefully</strong> - Use Editor/Commenter/Read-only roles</p>
+                    <p><strong>Use @mentions</strong> - Tag teammates in comments</p>
+                    <p><strong>Lock fields</strong> - Prevent accidental changes to formulas</p>
+                    <p><strong>Create form views</strong> - Let others add data safely</p>
+                    <p><strong>Share filtered views</strong> - Give stakeholders relevant data only</p>
+                </div>
+
+                <h3>🔒 Security Tips</h3>
+                <div class="warning">
+                    Never share full base access with untrusted parties. Use form views or restricted interfaces instead.
+                </div>
+
+                <div class="tip">
+                    Enable two-factor authentication on your Airtable account for added security.
+                </div>
+
+                <h3>📱 Mobile App Features (2026)</h3>
+                <div class="feature-list">
+                    <p>✓ Offline mode - Access data without internet</p>
+                    <p>✓ Camera integration - Scan barcodes and take photos</p>
+                    <p>✓ Push notifications - Get updates on record changes</p>
+                    <p>✓ Voice input - Dictate text into fields</p>
+                    <p>✓ Widget support - Quick access from home screen</p>
+                </div>
+
+                <h3>🔗 Integration Ideas</h3>
+                <div class="card">
+                    <p><strong>Slack:</strong> Post updates when records change</p>
+                    <p><strong>Gmail:</strong> Create records from emails</p>
+                    <p><strong>Google Calendar:</strong> Sync events automatically</p>
+                    <p><strong>Zapier/Make:</strong> Connect to 5000+ apps</p>
+                    <p><strong>Stripe:</strong> Track payments and customers</p>
+                </div>
+
+                <h3>💡 Common Use Cases</h3>
+                <div class="feature-list">
+                    <p>📊 Project tracking and management</p>
+                    <p>📸 Content and media libraries</p>
+                    <p>🏢 Employee onboarding workflows</p>
+                    <p>🎓 Student and class management</p>
+                    <p>🏠 Real estate property tracking</p>
+                    <p>📦 Product and inventory management</p>
+                    <p>💼 Freelance client and project tracking</p>
+                    <p>🎬 Production schedules and call sheets</p>
+                </div>
+            </div>
+        </div>
+
+        <footer>
+            <p><strong>2026 Airtable Beginners Guide</strong></p>
+            <p>Start building powerful databases today!</p>
+            <div class="footer-links">
+                <a href="https://airtable.com" target="_blank">Official Website</a>
+                <a href="https://support.airtable.com" target="_blank">Documentation</a>
+                <a href="https://community.airtable.com" target="_blank">Community</a>
+            </div>
+        </footer>
+    </div>
+
+    <script>
+        // Navigation
+        const navButtons = document.querySelectorAll('.nav-btn');
+        const sections = document.querySelectorAll('.section');
+
+        navButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                const sectionId = button.dataset.section;
+                
+                navButtons.forEach(btn => btn.classList.remove('active'));
+                button.classList.add('active');
+                
+                sections.forEach(section => section.classList.remove('active'));
+                document.getElementById(sectionId).classList.add('active');
+                
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            });
+        });
+
+        // Project details
+        function showProject(projectType) {
+            const projectDetails = {
+                task: `
+                    <h3>🎯 Build a Task Manager</h3>
+                    <div class="card">
+                        <h4>Fields to Create:</h4>
+                        <p>• <code>Task Name</code> (Single line text) - What needs to be done</p>
+                        <p>• <code>Status</code> (Single select) - Options: To Do, In Progress, Done</p>
+                        <p>• <code>Priority</code> (Single select) - Options: High, Medium, Low</p>
+                        <p>• <code>Due Date</code> (Date) - When it's due</p>
+                        <p>• <code>Category</code> (Single select) - Work, Personal, Shopping, etc.</p>
+                        <p>• <code>Notes</code> (Long text) - Additional details</p>
+                        <p>• <code>Completed</code> (Checkbox) - Mark as done</p>
+                    </div>
+                    <div class="step">
+                        <span class="step-number">1</span>
+                        Create a new base called "My Tasks"
+                    </div>
+                    <div class="step">
+                        <span class="step-number">2</span>
+                        Add all the fields listed above
+                    </div>
+                    <div class="step">
+                        <span class="step-number">3</span>
+                        Create a Kanban view grouped by Status
+                    </div>
+                    <div class="step">
+                        <span class="step-number">4</span>
+                        Add filters to show only incomplete tasks
+                    </div>
+                    <div class="tip">Create a Calendar view of your Due Date field to see tasks on a timeline!</div>
+                `,
+                content: `
+                    <h3>📝 Build a Content Calendar</h3>
+                    <div class="card">
+                        <h4>Fields to Create:</h4>
+                        <p>• <code>Content Title</code> (Single line text)</p>
+                        <p>• <code>Content Type</code> (Single select) - Blog Post, Social Media, Video, Newsletter</p>
+                        <p>• <code>Platform</code> (Multiple select) - Instagram, Twitter, LinkedIn, YouTube</p>
+                        <p>• <code>Publish Date</code> (Date)</p>
+                        <p>• <code>Status</code> (Single select) - Idea, Draft, Review, Scheduled, Published</p>
+                        <p>• <code>Author</code> (Collaborator) - Who's creating it</p>
+                        <p>• <code>Description</code> (Long text)</p>
+                        <p>• <code>Images</code> (Attachment)</p>
+                        <p>• <code>URL</code> (URL) - Link to published content</p>
+                    </div>
+                    <div class="step">
+                        <span class="step-number">1</span>
+                        Create base "Content Calendar 2026"
+                    </div>
+                    <div class="step">
+                        <span class="step-number">2</span>
+                        Add all content fields
+                    </div>
+                    <div class="step">
+                        <span class="step-number">3</span>
+                        Create a Calendar view by Publish Date
+                    </div>
+                    <div class="step">
+                        <span class="step-number">4</span>
+                        Create a Kanban view grouped by Status
+                    </div>
+                    <div class="step">
+                        <span class="step-number">5</span>
+                        Set up automation to notify when status changes to "Review"
+                    </div>
+                    <div class="tip">Use Gallery view to visualize your content with images!</div>
+                `,
+                crm: `
+                    <h3>👥 Build a Simple CRM</h3>
+                    <div class="card">
+                        <h4>Table 1: Contacts</h4>
+                        <p>• <code>Full Name</code> (Single line text)</p>
+                        <p>• <code>Email</code> (Email)</p>
+                        <p>• <code>Phone</code> (Phone number)</p>
+                        <p>• <code>Company</code> (Single line text)</p>
+                        <p>• <code>Status</code> (Single select) - Lead, Prospect, Customer, Inactive</p>
+                        <p>• <code>Tags</code> (Multiple select) - VIP, Newsletter, Partner</p>
+                        <p>• <code>Deals</code> (Link to Deals table)</p>
+                        <p>• <code>Notes</code> (Long text)</p>
+                    </div>
+                    <div class="card">
+                        <h4>Table 2: Deals</h4>
+                        <p>• <code>Deal Name</code> (Single line text)</p>
+                        <p>• <code>Contact</code> (Link to Contacts table)</p>
+                        <p>• <code>Value</code> (Currency)</p>
+                        <p>• <code>Stage</code> (Single select) - Prospecting, Proposal, Negotiation, Closed Won, Closed Lost</p>
+                        <p>• <code>Close Date</code> (Date)</p>
+                        <p>• <code>Probability</code> (Percent)</p>
+                    </div>
+                    <div class="step">
+                        <span class="step-number">1</span>
+                        Create two tables: Contacts and Deals
+                    </div>
+                    <div class="step">
+                        <span class="step-number">2</span>
+                        Link Contacts to Deals using "Link to another record"
+                    </div>
+                    <div class="step">
+                        <span class="step-number">3</span>
+                        Create Kanban view for Deals by Stage
+                    </div>
+                    <div class="step">
+                        <span class="step-number">4</span>
+                        Add a formula to calculate total deal value per contact
+                    </div>
+                    <div class="warning">Always respect privacy laws like GDPR when storing customer data!</div>
+                `,
+                inventory: `
+                    <h3>📦 Build an Inventory Tracker</h3>
+                    <div class="card">
+                        <h4>Fields to Create:</h4>
+                        <p>• <code>Product Name</code> (Single line text)</p>
+                        <p>• <code>SKU</code> (Single line text) - Stock keeping unit</p>
+                        <p>• <code>Category</code> (Single select) - Electronics, Clothing, Food, etc.</p>
+                        <p>• <code>Quantity in Stock</code> (Number)</p>
+                        <p>• <code>Minimum Stock Level</code> (Number)</p>
+                        <p>• <code>Unit Price</code> (Currency)</p>
+                        <p>• <code>Total Value</code> (Formula) - {Quantity in Stock} * {Unit Price}</p>
+                        <p>• <code>Supplier</code> (Single line text)</p>
+                        <p>• <code>Reorder Status</code> (Formula) - IF({Quantity in Stock} < {Minimum Stock Level}, "⚠️ Reorder", "✅ OK")</p>
+                        <p>• <code>Last Restocked</code> (Date)</p>
+                        <p>• <code>Product Image</code> (Attachment)</p>
+                    </div>
+                    <div class="step">
+                        <span class="step-number">1</span>
+                        Create base "Inventory 2026"
+                    </div>
+                    <div class="step">
+                        <span class="step-number">2</span>
+                        Add all product fields
+                    </div>
+                    <div class="step">
+                        <span class="step-number">3</span>
+                        Create filtered view showing items that need reordering
+                    </div>
+                    <div class="step">
+                        <span class="step-number">4</span>
+                        Set up automation to alert when stock is low
+                    </div>
+                    <div class="tip">Use barcode scanning on mobile app to quickly update quantities!</div>
+                `,
+                event: `
+                    <h3>🎉 Build an Event Planner</h3>
+                    <div class="card">
+                        <h4>Table 1: Events</h4>
+                        <p>• <code>Event Name</code> (Single line text)</p>
+                        <p>• <code>Event Date</code> (Date)</p>
+                        <p>• <code>Location</code> (Single line text)</p>
+                        <p>• <code>Budget</code> (Currency)</p>
+                        <p>• <code>Actual Spent</code> (Currency)</p>
+                        <p>• <code>Remaining Budget</code> (Formula) - {Budget} - {Actual Spent}</p>
+                        <p>• <code>Status</code> (Single select) - Planning, Confirmed, Completed</p>
+                        <p>• <code>Guests</code> (Link to Guests table)</p>
+                        <p>• <code>Tasks</code> (Link to Tasks table)</p>
+                    </div>
+                    <div class="card">
+                        <h4>Table 2: Guests</h4>
+                        <p>• <code>Guest Name</code> (Single line text)</p>
+                        <p>• <code>Email</code> (Email)</p>
+                        <p>• <code>RSVP Status</code> (Single select) - Invited, Confirmed, Declined, Maybe</p>
+                        <p>• <code>Event</code> (Link to Events)</p>
+                        <p>• <code>Dietary Restrictions</code> (Long text)</p>
+                    </div>
+                    <div class="step">
+                        <span class="step-number">1</span>
+                        Create Events and Guests tables
+                    </div>
+                    <div class="step">
+                        <span class="step-number">2</span>
+                        Link tables together
+                    </div>
+                    <div class="step">
+                        <span class="step-number">3</span>
+                        Create a form for guests to RSVP
+                    </div>
+                    <div class="step">
+                        <span class="step-number">4</span>
+                        Set up automation to send thank you emails when RSVP is confirmed
+                    </div>
+                    <div class="tip">Use Timeline view to visualize event schedules and deadlines!</div>
+                `,
+                recipe: `
+                    <h3>🍳 Build a Recipe Collection</h3>
+                    <div class="card">
+                        <h4>Fields to Create:</h4>
+                        <p>• <code>Recipe Name</code> (Single line text)</p>
+                        <p>• <code>Cuisine</code> (Single select) - Italian, Mexican, Asian, American, etc.</p>
+                        <p>• <code>Meal Type</code> (Multiple select) - Breakfast, Lunch, Dinner, Dessert, Snack</p>
+                        <p>• <code>Prep Time</code> (Number) - Minutes</p>
+                        <p>• <code>Cook Time</code> (Number) - Minutes</p>
+                        <p>• <code>Total Time</code> (Formula) - {Prep Time} + {Cook Time}</p>
+                        <p>• <code>Servings</code> (Number)</p>
+                        <p>• <code>Difficulty</code> (Single select) - Easy, Medium, Hard</p>
+                        <p>• <code>Ingredients</code> (Long text)</p>
+                        <p>• <code>Instructions</code> (Long text)</p>
+                        <p>• <code>Photos</code> (Attachment)</p>
+                        <p>• <code>Rating</code> (Rating 1-5 stars)</p>
+                        <p>• <code>Tags</code> (Multiple select) - Vegetarian, Vegan, Gluten-Free, Quick, Budget</p>
+                        <p>• <code>Source</code> (URL) - Where you found it</p>
+                    </div>
+                    <div class="step">
+                        <span class="step-number">1</span>
+                        Create base "My Recipe Collection"
+                    </div>
+                    <div class="step">
+                        <span class="step-number">2</span>
+                        Add all recipe fields
+                    </div>
+                    <div class="step">
+                        <span class="step-number">3</span>
+                        Create Gallery view to browse recipes visually
+                    </div>
+                    <div class="step">
+                        <span class="step-number">4</span>
+                        Add filters for quick meal ideas (e.g., "Quick" tag + under 30 minutes)
+                    </div>
+                    <div class="tip">Take photos of your finished dishes and upload them to make your collection beautiful!</div>
+                `
+            };
+
+            const detailsDiv = document.getElementById('project-details');
+            detailsDiv.innerHTML = projectDetails[projectType];
+            detailsDiv.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+    </script>
+</body>
+</html>
